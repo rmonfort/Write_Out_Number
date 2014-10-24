@@ -181,3 +181,7 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+*.sln
+*.config
+Write_Out_Number/Properties/AssemblyInfo.cs
+*.csproj
