@@ -21,7 +21,9 @@ namespace Write_Out_Number
                 userInput = Console.ReadLine();
             }
 
-            Console.WriteLine(ConvertNumberToEnglish(userInput));
+            int number;
+            Int32.TryParse(userInput, out number);
+            Console.WriteLine(ConvertNumberToEnglish(number));
         }
 
         // Check if string is equal to "0"
@@ -55,36 +57,95 @@ namespace Write_Out_Number
             }
         }
 
-        // Converts a number string to plain English
-        private static StringBuilder ConvertNumberToEnglish(string numberString)
+        // Recursively converts a number to English
+        public static string ConvertNumberToEnglish(int number)
         {
-            int numberOfDigits = numberString.Length;
-            StringBuilder convertedNumberString = new StringBuilder();
-
-            foreach (var digit in numberString)
+            if (IsZero(number)) 
             {
-                convertedNumberString.Append(digit).Append(" ");
+                return "zero";
             }
-            return convertedNumberString;
+
+            StringBuilder words = new StringBuilder();
+
+            if ((number / 1000000000) > 0)
+            {
+                words.Append(ConvertNumberToEnglish(number / 1000000000) + " billion ");
+                number %= 1000000000;
+            }
+
+            if ((number / 1000000) > 0)
+            {
+                words.Append(ConvertNumberToEnglish(number / 1000000) + " million ");
+                number %= 1000000;
+            }
+
+            if ((number / 1000) > 0)
+            {
+                words.Append(ConvertNumberToEnglish(number / 1000) + " thousand ");
+                number %= 1000;
+            }
+
+            if ((number / 100) > 0)
+            {
+                words.Append(ConvertNumberToEnglish(number / 100) + " hundred ");
+                number %= 100;
+            }
+
+            if (number > 0)
+            {
+                if (words.ToString() != "")
+                {
+                    words.Append("and ");
+                }
+
+                var units = new[] { 
+                    "zero", 
+                    "one", 
+                    "two", 
+                    "three", 
+                    "four", 
+                    "five", 
+                    "six", 
+                    "seven", 
+                    "eight", 
+                    "nine", 
+                    "ten", 
+                    "eleven", 
+                    "twelve", 
+                    "thirteen", 
+                    "fourteen", 
+                    "fifteen", 
+                    "sixteen", 
+                    "seventeen", 
+                    "eighteen", 
+                    "nineteen" };
+
+                var tens = new[] { 
+                    "zero", 
+                    "ten", 
+                    "twenty", 
+                    "thirty", 
+                    "forty", 
+                    "fifty", 
+                    "sixty", 
+                    "seventy", 
+                    "eighty", 
+                    "ninety" };
+
+                if (number < 20)
+                {
+                    words.Append(units[number]);
+                }
+                else
+                {
+                    words.Append(tens[number / 10]);
+                    if ((number % 10) > 0)
+                    {
+                        words.Append("-" + units[number % 10]);
+                    }
+                }
+            }
+            return words.ToString();
         }
-
-        //// Check if string is a 32 bit integer
-        //private static bool IsInteger32(string numberString)
-        //{
-        //    if (IsZero(numberString))
-        //    {
-        //        return true;
-        //    }
-
-        //    int number;
-        //    if (Int32.TryParse(numberString, out number)) // Check if string is actually a integer
-        //    {
-        //        return IsZero(number) ? false : true; // Check if number is a 32 bit integer by checking if value from parse is zero
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
     }
 }
